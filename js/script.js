@@ -3,6 +3,8 @@ const username = "hbouchard5";
 const repoList = document.querySelector(".repo-list"); //unordered list
 const reposSection = document.querySelector(".repos");  //section
 const repoSingle = document.querySelector(".repo-data");
+const backButton = document.querySelector(".view-repos");
+const filterInput = document.querySelector(".filter-repos");
 
 
 
@@ -57,6 +59,8 @@ const displayRepos = function(repos) {
         newli.innerHTML = `<h3>${repo.name}</h3>`;
         repoList.append(newli);
     }
+
+    filterInput.classList.remove("hide");
 };
 
 //event listener for click on one of the repo names
@@ -101,6 +105,43 @@ const displayDetails = function(repoInfo, languages) {
         <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>
     `;
     repoSingle.append(newDetailsDiv);
+
     repoSingle.classList.remove("hide");
     reposSection.classList.add("hide");
+    backButton.classList.remove("hide");
 };
+
+//click event to return back to gallery
+backButton.addEventListener("click", function() {
+    repoSingle.classList.add("hide");
+    reposSection.classList.remove("hide");
+});
+
+
+filterInput.addEventListener("input", function(e){
+    //capture user input from text box
+    const inputVal = e.target.value;
+
+    //select all repos into an array
+    const repos = document.querySelectorAll(".repo");
+    const searchText = inputVal.toLowerCase();
+
+    //check which repos match the search input
+    for (let repo of repos) {
+        //lower case version of repo name
+        const repoText = repo.innerText.toLowerCase();
+
+        //if repo contains search text
+        if (repoText.includes(searchText)) {
+            if (repo.classList.contains("hide")) {
+                repo.classList.remove("hide");
+            }   
+        } else {
+            //if repo does not contain search text 
+            if (repo.classList.contains("hide")) {
+            } else {
+                repo.classList.add("hide");
+            }
+        }
+    }
+});
