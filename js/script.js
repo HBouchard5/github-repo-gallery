@@ -1,11 +1,10 @@
 const profileDiv = document.querySelector(".overview"); //div to display profile
 const username = "hbouchard5";
 const repoList = document.querySelector(".repo-list"); //unordered list
-const reposSection = document.querySelector(".repos");  //section
-const repoSingle = document.querySelector(".repo-data");
-const backButton = document.querySelector(".view-repos");
-const filterInput = document.querySelector(".filter-repos");
-
+const reposSection = document.querySelector(".repos");  //section to display all repos
+const repoSingle = document.querySelector(".repo-data");    //section to display repo details
+const backButton = document.querySelector(".view-repos");   //button to return to all repos
+const filterInput = document.querySelector(".filter-repos");    //user input to search by text
 
 
 //async function to github API to fetch user profile data
@@ -43,12 +42,12 @@ getProfile();
 const fetchRepos = async function() {
     const result = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`);
     let repos = await result.json();
-    console.log(repos);
 
     //call function to display repo data on webpage
     displayRepos(repos);
 };
 
+//load all repos when page refreshes
 fetchRepos();
 
 //function to create HTML to display repo data
@@ -59,8 +58,11 @@ const displayRepos = function(repos) {
         newli.innerHTML = `<h3>${repo.name}</h3>`;
         repoList.append(newli);
     }
-
+    //show input search box
     filterInput.classList.remove("hide");
+
+    //hide "back to Repo Gallery" button
+    backButton.classList.add("hide");
 };
 
 //event listener for click on one of the repo names
@@ -78,7 +80,6 @@ const repoInfo = async function(repoName) {
     //fetch all parameters for repo that was clicked on
     const holdData = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
     const singleRepo = await holdData.json();
-    console.log(singleRepo);
     
     //fetch coding languages based on language_url parameter from clicked repo
     const fetchLanguages = await fetch(`${singleRepo.languages_url}`);
@@ -115,6 +116,9 @@ const displayDetails = function(repoInfo, languages) {
 backButton.addEventListener("click", function() {
     repoSingle.classList.add("hide");
     reposSection.classList.remove("hide");
+
+    //hide "back to Repo Gallery" button
+    backButton.classList.add("hide");
 });
 
 
